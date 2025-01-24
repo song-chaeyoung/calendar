@@ -4,7 +4,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import style from "../styles/calendar.module.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { getHolidayApi, holidayItemType } from "@/services/holiday";
-import Loading from "./loading";
+import MonthCalendar from "./monthCalendar";
+import WeekCalendar from "./weekCalendar";
+// import Loading from "./loading";
 
 const dayName = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -14,7 +16,7 @@ const plusFrontZero = (num: number | string) => {
 };
 
 const Calendar = () => {
-  const [monthVersion, setMonthVersion] = useState(true);
+  const [monthCalendar, setMonthCalendar] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [holiday, setHoliday] = useState<holidayItemType[] | undefined>(
     undefined
@@ -114,10 +116,15 @@ const Calendar = () => {
         <h3>
           {currentDate.getFullYear()}.
           {plusFrontZero(currentDate.getMonth() + 1)}
+          {!monthCalendar && " 1주차"}
         </h3>
         <span className={style.rightArr} onClick={() => handleNextMonth()}>
           <IoIosArrowForward />
         </span>
+        <div className={style.changeBtn}>
+          <button onClick={() => setMonthCalendar(true)}>월간</button>
+          <button onClick={() => setMonthCalendar(false)}>주간</button>
+        </div>
       </div>
       <table className={style.table}>
         <thead>
@@ -127,36 +134,15 @@ const Calendar = () => {
             ))}
           </tr>
         </thead>
-        <tbody>
-          {date.map((week: Date[], idx) => (
-            <tr key={idx}>
-              {week.map((day: Date, idx) => {
-                const holidayInfo = getHolidayInfo(day);
-                return (
-                  <td
-                    key={idx}
-                    className={`${style.day} ${
-                      currentDate.getMonth() !== day.getMonth() &&
-                      `${style.grey}`
-                    } ${holidayInfo ? style.holiday : ""} ${
-                      `${day.getFullYear()}${day.getMonth()}${day.getDate()}` ===
-                      `${new Date().getFullYear()}${new Date().getMonth()}${new Date().getDate()}`
-                        ? style.today
-                        : ""
-                    }`}
-                  >
-                    <span>{new Date(day).getDate()}</span>
-                    {holidayInfo && (
-                      <span className={style.holidayName}>
-                        {holidayInfo.dateName}
-                      </span>
-                    )}
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
+        {monthCalendar ? (
+          <MonthCalendar
+            date={date}
+            currentDate={currentDate}
+            getHolidayInfo={getHolidayInfo}
+          />
+        ) : (
+          <WeekCalendar />
+        )}
       </table>
     </div>
   );

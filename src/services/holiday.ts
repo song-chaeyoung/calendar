@@ -9,8 +9,7 @@ export interface resType {
     };
   };
 }
-
-export interface holidayType {
+interface holidayType {
   items: {
     item: holidayItemType[];
   };
