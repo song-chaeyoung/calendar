@@ -1,30 +1,32 @@
+import { resType } from "@/store/calendarStore";
+
 const holidayApiKey = process.env.NEXT_PUBLIC_HOLIDAY_API;
 
-export interface resType {
-  response: {
-    body: holidayType;
-    header: {
-      resultCode: string;
-      resultMsg: string;
-    };
-  };
-}
-interface holidayType {
-  items: {
-    item: holidayItemType[];
-  };
-  numOfRows: number;
-  pageNo: number;
-  totalCount: number;
-}
+// export interface resType {
+//   response: {
+//     body: holidayType;
+//     header: {
+//       resultCode: string;
+//       resultMsg: string;
+//     };
+//   };
+// }
+// interface holidayType {
+//   items: {
+//     item: holidayItemType[];
+//   };
+//   numOfRows: number;
+//   pageNo: number;
+//   totalCount: number;
+// }
 
-export interface holidayItemType {
-  dateKind: string;
-  dateName: string;
-  isHoliday: string;
-  locdate: number;
-  seq: number;
-}
+// export interface holidayItemType {
+//   dateKind: string;
+//   dateName: string;
+//   isHoliday: string;
+//   locdate: number;
+//   seq: number;
+// }
 
 export const getHolidayApi = async (
   month: string,

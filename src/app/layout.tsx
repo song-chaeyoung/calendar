@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <title>mini pratice</title>
+        <title>직원용 ERP</title>
       </head>
       <body>
         <Header />

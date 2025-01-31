@@ -1,33 +1,33 @@
 import React from "react";
 import style from "../styles/calendar.module.css";
-import { holidayItemType } from "@/services/holiday";
+import { holidayItemType } from "@/store/calendarStore";
+import dayjs, { Dayjs } from "dayjs";
 
 interface propsType {
-  date: Date[][];
-  currentDate: Date;
-  getHolidayInfo: (day: Date) => holidayItemType | undefined;
+  date: Dayjs[][];
+  currentDate: Dayjs;
+  getHolidayInfo: (day: Dayjs) => holidayItemType | undefined;
 }
 
 const MonthCalendar = ({ date, currentDate, getHolidayInfo }: propsType) => {
   return (
     <tbody>
-      {date.map((week: Date[], idx) => (
+      {date.map((week: Dayjs[], idx) => (
         <tr key={idx}>
-          {week.map((day: Date, idx) => {
+          {week.map((day: Dayjs, idx) => {
             const holidayInfo = getHolidayInfo(day);
             return (
               <td
                 key={idx}
                 className={`${style.day} ${
-                  currentDate.getMonth() !== day.getMonth() && `${style.grey}`
+                  currentDate.month() !== day.month() && `${style.grey}`
                 } ${holidayInfo ? style.holiday : ""} ${
-                  `${day.getFullYear()}${day.getMonth()}${day.getDate()}` ===
-                  `${new Date().getFullYear()}${new Date().getMonth()}${new Date().getDate()}`
+                  day.format("YYMMDD") === dayjs().format("YYMMDD")
                     ? style.today
                     : ""
                 }`}
               >
-                <span>{new Date(day).getDate()}</span>
+                <span>{day.date()}</span>
                 {holidayInfo && (
                   <span className={style.holidayName}>
                     {holidayInfo.dateName}

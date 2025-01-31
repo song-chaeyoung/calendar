@@ -5,7 +5,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const Loading = () => {
   return (
     <section className={style.container}>
-      <AiOutlineLoading3Quarters className={style.loading} />
+      <AiOutlineLoading3Quarters className={style.loading} size={30} />
     </section>
   );
 };

@@ -15,13 +15,37 @@
   user-select: none;
   .header {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
     position: relative;
+    display: flex;
+    justify-content: center;
+    & > .headerCenter {
+      width: 250px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      .todayBtn {
+        position: absolute;
+        top: 50%;
+        /* right: 38%; */
+        right: -20%;
+        transform: translateY(-50%);
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: "S-CoreDream-3Light";
+        cursor: pointer;
+        background: rgba(245, 245, 220, 0.75);
+        font-size: 16px;
+        color: #333;
+        &.disable {
+          opacity: 70%;
+          cursor: default;
+        }
+      }
+    }
     h3 {
-      /* align-items: center; */
       font-weight: 400;
     }
     span {
@@ -29,6 +53,20 @@
       cursor: pointer;
       font-size: 20px;
       color: rgb(215, 66, 40);
+    }
+    .addBtn {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      & > button {
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: "S-CoreDream-3Light";
+        cursor: pointer;
+        background: rgba(245, 245, 220, 0.75);
+        font-size: 16px;
+      }
     }
     .changeBtn {
       position: absolute;
@@ -44,6 +82,9 @@
         cursor: pointer;
         background: rgba(245, 245, 220, 0.75);
         font-size: 16px;
+        &.active {
+          background: rgba(245, 245, 220, 0.35);
+        }
       }
     }
   }
@@ -70,6 +111,9 @@
     }
     .day {
       vertical-align: top;
+    }
+    .weekDay {
+      height: 550px;
     }
     .grey {
       background: rgba(128, 128, 128, 0.1);
