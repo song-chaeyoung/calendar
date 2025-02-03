@@ -14,6 +14,7 @@ import {
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import Schedule from "./schedule";
+import Modal from "./modal";
 // import Loading from "./loading";
 
 const dayName = ["일", "월", "화", "수", "목", "금", "토"];
@@ -133,7 +134,11 @@ const Calendar = () => {
 
   return (
     <div className={style.container}>
-      {addEvent && <Schedule setAddEvent={setAddEvent} />}
+      {addEvent && (
+        <Modal setClose={setAddEvent} title="일정 추가하기">
+          <Schedule setClose={setAddEvent} />
+        </Modal>
+      )}
       <div className={style.header}>
         <div className={style.addBtn}>
           <button onClick={() => setAddEvent(true)}>일정 추가하기</button>
