@@ -3,12 +3,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import style from "../styles/calendar.module.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-// import { getHolidayApi } from "@/services/holiday";
 import MonthCalendar from "./monthCalendar";
 import WeekCalendar from "./weekCalendar";
 import {
   holidayItemType,
   useCalendarUiStore,
+  useEventStore,
   useHolidayStore,
 } from "@/store/calendarStore";
 import dayjs, { Dayjs } from "dayjs";
@@ -31,8 +31,9 @@ const Calendar = () => {
   dayjs.locale("ko");
   const { holiday, fetchHoliday } = useHolidayStore();
   const { isMonthView, setIsMonthView } = useCalendarUiStore();
-  // const [currentDate, setCurrentDate] = useState(new Date());
+  const { event, fetchEvent } = useEventStore();
   const [currentDate, setCurrentDate] = useState(dayjs());
+  const [addEvent, setAddEvent] = useState<boolean>(false);
 
   const year = currentDate.year();
   const month = currentDate.month() + 1;
@@ -46,8 +47,6 @@ const Calendar = () => {
     [year, month]
   );
   const startDay = useMemo(() => {
-    // const start = new Date(firstDayOfMonth);
-    // start.setDate(1 - firstDayOfMonth.getDay());
     return firstDayOfMonth.startOf("week");
   }, [firstDayOfMonth]);
 
@@ -60,16 +59,12 @@ const Calendar = () => {
     [year, month]
   );
   const endDay = useMemo(() => {
-    // const end = new Date(lastDayOfMonth);
-    // end.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay()));
     return lastDayOfMonth.endOf("week");
   }, [lastDayOfMonth]);
 
   const date = useMemo(() => {
     const weeks = [];
     let currentWeek = [];
-    // const currentDate = new Date(startDay);
-    // const currentDate = dayjs(startDay);
     let currentDate = startDay;
 
     while (currentDate.isBefore(endDay || currentDate.isSame(endDay, "day"))) {
@@ -80,7 +75,6 @@ const Calendar = () => {
         currentWeek = [];
       }
 
-      // currentDate.setDate(currentDate.getDate() + 1);
       currentDate = currentDate.add(1, "day");
     }
 
@@ -92,14 +86,10 @@ const Calendar = () => {
   }, [startDay, endDay]);
 
   const handlePrevMonth = useCallback(() => {
-    // setCurrentDate(new Date(currentDate.year(), currentDate.month() - 1, 1));
     setCurrentDate((prev) => prev.subtract(1, "month"));
   }, [currentDate]);
 
   const handleNextMonth = useCallback(() => {
-    // setCurrentDate(
-    //   new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
-    // );
     setCurrentDate((prev) => prev.add(1, "month"));
   }, [currentDate]);
 
@@ -111,13 +101,6 @@ const Calendar = () => {
   const currenWeek = date[currentWeekIndex] || date[0];
 
   const handlePrevWeek = useCallback(() => {
-    // setCurrentDate(
-    //   new Date(
-    //     currentDate.getFullYear(),
-    //     currentDate.getMonth(),
-    //     currentDate.getDate() - 7
-    //   )
-    // );
     setCurrentDate((prev) => prev.subtract(1, "week"));
   }, [currentDate]);
   const handleNextWeek = useCallback(() => {
@@ -128,10 +111,6 @@ const Calendar = () => {
   const getHolidayInfo = useCallback(
     (day: Dayjs): holidayItemType | undefined => {
       if (!holiday || !Array.isArray(holiday)) return undefined;
-
-      // const formatDate = `${day.getFullYear()}${plusFrontZero(
-      //   day.getMonth() + 1
-      // )}${plusFrontZero(day.getDate())}`;
 
       const formatDate = day.format("YYYYMMDD");
 
@@ -147,15 +126,17 @@ const Calendar = () => {
     fetchHoliday(year, month);
   }, [currentDate]);
 
-  // console.log(date);
+  useEffect(() => {
+    fetchEvent();
+    console.log(event);
+  }, []);
+
   return (
     <div className={style.container}>
-      {/* {isLoading && <Loading />} */}
-      {/* <Loading /> */}
-      <Schedule />
+      {addEvent && <Schedule setAddEvent={setAddEvent} />}
       <div className={style.header}>
         <div className={style.addBtn}>
-          <button>일정 추가하기</button>
+          <button onClick={() => setAddEvent(true)}>일정 추가하기</button>
         </div>
         <div className={style.headerCenter}>
           <span

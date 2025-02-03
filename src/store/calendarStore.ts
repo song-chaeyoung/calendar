@@ -1,3 +1,4 @@
+import { eventType } from "@/types/event";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -74,6 +75,25 @@ export const useHolidayStore = create<calendarStoreType>((set, get) => ({
       set({ holiday: undefined });
     } finally {
       set({ isLoading: false });
+    }
+  },
+}));
+
+interface eventStoreType {
+  event: eventType | undefined;
+  fetchEvent: () => void;
+}
+
+export const useEventStore = create<eventStoreType>((set) => ({
+  event: undefined,
+  fetchEvent: async () => {
+    try {
+      const response = await fetch("/api/event");
+      const json = await response.json();
+      console.log(json);
+      set({ event: json });
+    } catch (err) {
+      console.error(err);
     }
   },
 }));

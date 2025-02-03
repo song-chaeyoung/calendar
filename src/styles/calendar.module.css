@@ -80,10 +80,10 @@
         border-radius: 4px;
         font-family: "S-CoreDream-3Light";
         cursor: pointer;
-        background: rgba(245, 245, 220, 0.75);
+        background: rgba(245, 245, 220, 0.35);
         font-size: 16px;
         &.active {
-          background: rgba(245, 245, 220, 0.35);
+          background: rgba(245, 245, 220, 0.75);
         }
       }
     }

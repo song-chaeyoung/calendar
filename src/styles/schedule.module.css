@@ -11,15 +11,38 @@
   z-index: 10;
   .mainBox {
     background: #fff;
-    /* width: 400px;
-    height: 500px; */
-    padding: 40px;
     border-radius: 10px;
   }
   .title {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 20px;
+    padding: 10px 30px;
+    background: beige;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & > p:nth-child(2) {
+      font-size: 14px;
+      cursor: pointer;
+      position: relative;
+      & > span {
+        opacity: 0;
+        position: absolute;
+        bottom: 20%;
+        left: 150%;
+        word-break: keep-all;
+        background: lightgrey;
+        padding: 2px 4px;
+        transition: all 0.3s;
+      }
+      &:hover {
+        & > span {
+          opacity: 1;
+        }
+      }
+    }
   }
   .form {
     display: flex;
@@ -27,6 +50,7 @@
     align-items: center;
     gap: 20px;
     width: 100%;
+    padding: 30px;
     & > div {
       display: flex;
       align-items: center;
@@ -37,7 +61,7 @@
       }
       & > input,
       textarea {
-        width: 300px;
+        width: 400px;
         padding: 4px;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -49,6 +73,57 @@
         height: 100px;
         resize: none;
       }
+    }
+    .dategroup {
+      width: 400px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      & > p {
+        width: fit-content;
+      }
+      & > input[type="date"] {
+        margin-right: 10px;
+        flex: 1;
+        border: 1px solid #ccc;
+        padding: 4px;
+        border-radius: 5px;
+        position: relative;
+        &::-webkit-clear-button,
+        &::-webkit-inner-spin-button {
+          display: none;
+        }
+        &::-webkit-calendar-picker-indicator {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background: transparent;
+          color: transparent;
+        }
+        &::before {
+          content: attr(data-placeholder);
+          width: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+        &:focus::before,
+        &:valid::before {
+          display: none;
+        }
+      }
+      /* input[type="date"]::before {
+        content: attr(data-placeholder);
+        width: 100%;
+      }
+
+      input[type="date"]:focus::before,
+      input[type="date"]:valid::before {
+        display: none;
+      } */
     }
     .submit_btn {
       padding: 10px 40px;
