@@ -95,12 +95,16 @@ export const useEventStore = create<eventStoreType>((set) => ({
   fetchEvent: async () => {
     set({ loading: true });
     try {
-      const response = await fetch("/api/event");
+      // const response = await fetch("/api/event");
+      const response = await fetch("/api/event", {
+        cache: "no-store", // 캐시 비활성화
+      });
       const json = await response.json();
       console.log(json);
       set({ event: json });
     } catch (err) {
       console.error(err);
+      set({ event: [] });
     } finally {
       set({ loading: false });
     }

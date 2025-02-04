@@ -81,6 +81,9 @@ const Schedule = ({ setClose }: props) => {
       const result = await res.json();
       setClose(false);
       setConfirm(true);
+
+      useEventStore.getState().fetchEvent();
+
       return result;
     } catch (err) {
       console.error(err);

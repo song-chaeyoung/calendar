@@ -234,28 +234,21 @@
 }
 
 .eventContainer {
-  /* position: absolute; */
-  /* top: 0;
-  left: 0; */
   /* position: relative; */
   margin-top: 5px;
   display: flex;
   flex-direction: column;
   gap: 4px;
   overflow: hidden;
-  /* .eventWrapper {
-    position: absolute;
-    left: 0;
-    width: 100%;
-  } */
   .eventWrapper {
     position: absolute;
+    left: 0;
     min-height: 20px;
     width: 100%;
     .eventBox {
       cursor: pointer;
-      /* position: absolute; */
-      position: relative;
+      position: absolute;
+      /* position: relative; */
       min-height: 20px;
       color: white;
       padding: 2px 10px;
@@ -292,6 +285,8 @@
     .multiDay {
       width: 102%;
       /* left: -2px; */
+      position: absolute;
+      z-index: 1;
     }
 
     .singleDay {
