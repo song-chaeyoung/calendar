@@ -2,11 +2,13 @@ import React from "react";
 import { holidayItemType } from "@/store/calendarStore";
 import style from "../styles/calendar.module.css";
 import dayjs, { Dayjs } from "dayjs";
+import { eventType } from "@/types/event";
 
 interface propsType {
   currentDate: Dayjs;
   currenWeek: Dayjs[];
   getHolidayInfo: (day: Dayjs) => holidayItemType | undefined;
+  event: eventType[] | undefined;
 }
 
 const WeekCalendar = ({

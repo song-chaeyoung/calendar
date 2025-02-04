@@ -1,4 +1,6 @@
 .container {
+  margin-left: 200px;
+  margin-top: 60px;
   width: calc(100vw - 200px);
   height: calc(100vh - 60px);
   background: rgba(100, 100, 100, 0.1);
@@ -8,7 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 100;
   .mainBox {
     background: #fff;
     border-radius: 10px;

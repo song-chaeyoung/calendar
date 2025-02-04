@@ -9,7 +9,8 @@ interface propsType {
 
 const Modal = ({ setClose, title, children }: propsType) => {
   return (
-    <section onClick={() => setClose(false)} className={style.container}>
+    // <section onClick={() => setClose(false)} className={style.container}>
+    <div className={style.container}>
       <div onClick={(e) => e.stopPropagation()} className={style.mainBox}>
         <div className={style.title}>
           <p>{title}</p>
@@ -19,7 +20,7 @@ const Modal = ({ setClose, title, children }: propsType) => {
         </div>
         {children}
       </div>
-    </section>
+    </div>
   );
 };
 

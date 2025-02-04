@@ -31,12 +31,6 @@
   }
   /* .select {
   } */
-  .time {
-    display: flex;
-    & > input {
-      width: 195px;
-    }
-  }
   .dategroup {
     width: 400px;
     display: flex;
@@ -47,12 +41,12 @@
       width: fit-content;
     }
     & > input[type="date"] {
-      margin-right: 10px;
       flex: 1;
       border: 1px solid #ccc;
       padding: 4px;
       border-radius: 5px;
       position: relative;
+      width: 120px;
       &::-webkit-clear-button,
       &::-webkit-inner-spin-button {
         display: none;
@@ -78,16 +72,67 @@
         display: none;
       }
     }
-    /* input[type="date"]::before {
-      content: attr(data-placeholder);
-      width: 100%;
-    }
-
-    input[type="date"]:focus::before,
-    input[type="date"]:valid::before {
-      display: none;
-    } */
   }
+  .time {
+    display: flex;
+    width: 100%;
+
+    & > div {
+      width: 195px;
+      display: flex;
+      gap: 10px;
+      position: relative;
+      font-size: 14px;
+      align-items: center;
+      & > input {
+        flex: 1;
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 120px;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        &:focus {
+          outline: none;
+          background: none;
+        }
+      }
+    }
+    .timetable {
+      width: 130px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: absolute;
+      top: 102%;
+      right: 0px;
+      background: #fff;
+      padding: 10px;
+      text-align: center;
+      height: 200px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+    }
+  }
+
+  /* .timetable {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    background: #fff;
+    padding: 10px;
+    text-align: center;
+    height: 200px;
+    overflow: scroll;
+    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+  } */
   .submit_btn {
     padding: 10px 40px;
     border: none;

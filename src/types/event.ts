@@ -3,6 +3,7 @@ export interface eventType {
   title: string;
   startDate: string;
   endDate: string;
-  time: string;
   content: string;
+  startTime: string;
+  endTime: string;
 }

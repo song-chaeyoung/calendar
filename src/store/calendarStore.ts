@@ -80,13 +80,20 @@ export const useHolidayStore = create<calendarStoreType>((set, get) => ({
 }));
 
 interface eventStoreType {
-  event: eventType | undefined;
+  event: eventType[] | undefined;
+  loading: boolean;
+  confirm: boolean;
+  setConfirm: (arg: boolean) => void;
   fetchEvent: () => void;
 }
 
 export const useEventStore = create<eventStoreType>((set) => ({
   event: undefined,
+  loading: false,
+  confirm: false,
+  setConfirm: (arg) => set({ confirm: arg }),
   fetchEvent: async () => {
+    set({ loading: true });
     try {
       const response = await fetch("/api/event");
       const json = await response.json();
@@ -94,8 +101,24 @@ export const useEventStore = create<eventStoreType>((set) => ({
       set({ event: json });
     } catch (err) {
       console.error(err);
+    } finally {
+      set({ loading: false });
     }
   },
+}));
+
+interface nowEventStoreType {
+  modal: boolean;
+  setModal: (arg: boolean) => void;
+  nowEvent: eventType | undefined;
+  setNowEvent: (arg: eventType) => void;
+}
+
+export const useNowEventStore = create<nowEventStoreType>((set) => ({
+  modal: false,
+  setModal: (arg) => set({ modal: arg }),
+  nowEvent: undefined,
+  setNowEvent: (data) => set({ nowEvent: data }),
 }));
 
 interface UiState {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import style from "./header.module.css";
+import style from "../styles/header.module.css";
 import Link from "next/link";
 
 const Header = () => {

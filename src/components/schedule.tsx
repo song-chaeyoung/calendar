@@ -1,24 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "../styles/schedule.module.css";
 import dayjs from "dayjs";
+import { useEventStore } from "@/store/calendarStore";
+import Loading from "./loading";
 
 interface props {
   setClose: (arg: boolean) => void;
 }
 
+interface timeType {
+  time: string;
+  calculate: number;
+}
+
+interface timeTableType {
+  start: boolean;
+  end: boolean;
+}
+
+// TIME SETTING
+const timeSlots = Array.from({ length: 48 }, (_, i) => {
+  const hours24 = Math.floor(i / 2);
+  const strHours24 = String(hours24).padStart(2, "0");
+  const hours12 = String(hours24 % 12 === 0 ? 12 : hours24 % 12);
+  const minutes = i % 2 === 0 ? "00" : "30";
+  const period = hours24 < 12 ? "오전" : "오후";
+
+  return {
+    time: `${strHours24}:${minutes}`,
+    timetable: `${period} ${hours12}:${minutes}`,
+    calculate: i * 30,
+  };
+});
+
+const now = new Date();
+const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+const upcomingIndex = timeSlots.findIndex(
+  (slot) => slot.calculate >= nowMinutes
+);
+const upcomingTime = timeSlots[upcomingIndex] || timeSlots[0];
+const upcoimgNextTime = timeSlots[(upcomingIndex + 1) % timeSlots.length];
+
 const Schedule = ({ setClose }: props) => {
-  // const [state, setAction] = useActionState(submitHandler, null);
-  // const [category, setCategory] = useState();
+  const { loading, setConfirm } = useEventStore();
+  const [time, setTime] = useState<timeType>(upcomingTime);
+  const [endTime, setEndTime] = useState<timeType>(upcoimgNextTime);
+  const [timeTableActive, setTimeTableActive] = useState<timeTableType>({
+    start: false,
+    end: false,
+  });
   const [date, setDate] = useState({
     start: `${dayjs().format("YYYY-MM-DD")}`,
     end: `${dayjs().format("YYYY-MM-DD")}`,
   });
-
-  // console.log(date.end - date.start);
-
-  // useEffect(() => {
-  //   console.log(state?.data);
-  // }, [state]);
 
   const submitHandler = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
@@ -45,6 +80,7 @@ const Schedule = ({ setClose }: props) => {
 
       const result = await res.json();
       setClose(false);
+      setConfirm(true);
       return result;
     } catch (err) {
       console.error(err);
@@ -53,8 +89,19 @@ const Schedule = ({ setClose }: props) => {
     return data;
   };
 
+  useEffect(() => {
+    const timeIdx = timeSlots.findIndex(
+      (it) => it.calculate === time.calculate
+    );
+    const nextTime = timeSlots[(timeIdx + 1) % timeSlots.length];
+
+    setEndTime(nextTime);
+  }, [time]);
+
   return (
     <form className={style.form} action={submitHandler}>
+      {loading && <Loading />}
+
       <div>
         <label htmlFor="category">카테고리</label>
         <select
@@ -93,7 +140,7 @@ const Schedule = ({ setClose }: props) => {
                 start: e.target.value,
               }))
             }
-            max={date.end}
+            // max={date.end}
           />
           <p>종료날짜</p>
           <input
@@ -113,9 +160,68 @@ const Schedule = ({ setClose }: props) => {
         </div>
       </div>
       <div className={style.time}>
-        <label htmlFor="input_time">일정 시간</label>
-        <input type="text" id="input_time" name="time" />
-        <input type="text" id="input_time" name="time" />
+        <label htmlFor="startTime">일정 시간</label>
+        <div>
+          <p>시작시간</p>
+          <input
+            type="time"
+            id="input_time"
+            name="startTime"
+            value={time.time}
+            readOnly
+            required
+            onClick={() =>
+              setTimeTableActive((prev) => ({ ...prev, start: !prev.start }))
+            }
+          />
+          {timeTableActive.start && (
+            <ul className={style.timetable}>
+              {timeSlots.map((item) => (
+                <li
+                  key={item.calculate}
+                  onClick={() => {
+                    setTime(item);
+                    setTimeTableActive((prev) => ({
+                      ...prev,
+                      start: !prev.start,
+                    }));
+                  }}
+                >
+                  {item.timetable}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div>
+          <p>종료시간</p>
+          <input
+            type="time"
+            id="input_time"
+            name="endTime"
+            value={endTime.time}
+            readOnly
+            required
+            onClick={() =>
+              setTimeTableActive((prev) => ({ ...prev, end: !prev.end }))
+            }
+          />
+          {timeTableActive.end && (
+            <ul className={style.timetable}>
+              {timeSlots.map((item) => (
+                <li
+                  key={item.calculate}
+                  onClick={() => {
+                    setEndTime(item);
+                    setTimeTableActive((prev) => ({ ...prev, end: !prev.end }));
+                  }}
+                >
+                  {item.timetable}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
       <div>
         <label htmlFor="input_content">일정 내용</label>
