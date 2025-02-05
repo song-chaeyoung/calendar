@@ -80,28 +80,46 @@ export const useHolidayStore = create<calendarStoreType>((set, get) => ({
 }));
 
 interface eventStoreType {
-  event: eventType[] | undefined;
   loading: boolean;
+  event: eventType[] | [];
   confirm: boolean;
-  setConfirm: (arg: boolean) => void;
+  isCategoryView: string;
   fetchEvent: () => void;
+  setConfirm: (arg: boolean) => void;
+  setIsCategoryView: (arg: string) => void;
 }
 
-export const useEventStore = create<eventStoreType>((set) => ({
-  event: undefined,
-  loading: false,
+export const useEventStore = create<eventStoreType>((set, get) => ({
+  event: [],
+  loading: true,
   confirm: false,
+  isCategoryView: "all",
+  setIsCategoryView: (arg) => set({ isCategoryView: arg }),
   setConfirm: (arg) => set({ confirm: arg }),
   fetchEvent: async () => {
     set({ loading: true });
     try {
       // const response = await fetch("/api/event");
       const response = await fetch("/api/event", {
-        cache: "no-store", // 캐시 비활성화
+        cache: "no-store",
       });
       const json = await response.json();
-      console.log(json);
-      set({ event: json });
+
+      const itemArr: eventType[] | undefined = [];
+      const sortFnc = () => {
+        json.map((item: eventType | undefined) => {
+          if (!item) return;
+          const category = get().isCategoryView;
+          if (category === "all") itemArr.push(item);
+          else {
+            if (item?.category === category) itemArr.push(item);
+          }
+        });
+      };
+
+      sortFnc();
+
+      set({ event: itemArr });
     } catch (err) {
       console.error(err);
       set({ event: [] });

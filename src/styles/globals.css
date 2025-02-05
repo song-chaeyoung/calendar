@@ -17,6 +17,12 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "FONTTEST";
+  font-weight: 200;
+  src: url("../../public/font/HJ한전서B.ttf") format("truetype");
+}
+
 html {
   font-size: 16px;
 }

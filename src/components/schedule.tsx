@@ -3,6 +3,7 @@ import style from "../styles/schedule.module.css";
 import dayjs from "dayjs";
 import { useEventStore } from "@/store/calendarStore";
 import Loading from "./loading";
+import { fontTest } from "@/app/layout";
 
 interface props {
   setClose: (arg: boolean) => void;
@@ -43,19 +44,10 @@ const upcomingTime = timeSlots[upcomingIndex] || timeSlots[0];
 const upcoimgNextTime = timeSlots[(upcomingIndex + 1) % timeSlots.length];
 
 const Schedule = ({ setClose }: props) => {
-  const { loading, setConfirm } = useEventStore();
-  const [time, setTime] = useState<timeType>(upcomingTime);
-  const [endTime, setEndTime] = useState<timeType>(upcoimgNextTime);
-  const [timeTableActive, setTimeTableActive] = useState<timeTableType>({
-    start: false,
-    end: false,
-  });
-  const [date, setDate] = useState({
-    start: `${dayjs().format("YYYY-MM-DD")}`,
-    end: `${dayjs().format("YYYY-MM-DD")}`,
-  });
+  const { setConfirm, fetchEvent } = useEventStore();
+  const [edit, setEdit] = useState<boolean>(true);
 
-  const submitHandler = async (formData: FormData) => {
+  const postApi = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
 
     if (data) {
@@ -92,6 +84,36 @@ const Schedule = ({ setClose }: props) => {
     return data;
   };
 
+  const getApi = async () => {
+    if (edit) fetchEvent();
+  };
+
+  return (
+    <>
+      <UiSchedule edit={edit} postApi={postApi} getApi={getApi} />
+    </>
+  );
+};
+
+interface uiProps {
+  edit: boolean;
+  postApi: (formData: FormData) => void;
+  getApi: () => void;
+}
+
+export const UiSchedule = ({ edit, postApi, getApi }: uiProps) => {
+  const [time, setTime] = useState<timeType>(upcomingTime);
+  const [endTime, setEndTime] = useState<timeType>(upcoimgNextTime);
+  // const { loading } = useEventStore();
+  const [timeTableActive, setTimeTableActive] = useState<timeTableType>({
+    start: false,
+    end: false,
+  });
+  const [date, setDate] = useState({
+    start: `${dayjs().format("YYYY-MM-DD")}`,
+    end: `${dayjs().format("YYYY-MM-DD")}`,
+  });
+
   useEffect(() => {
     const timeIdx = timeSlots.findIndex(
       (it) => it.calculate === time.calculate
@@ -101,9 +123,14 @@ const Schedule = ({ setClose }: props) => {
     setEndTime(nextTime);
   }, [time]);
 
+  useEffect(() => {
+    const test = getApi();
+    console.log(test);
+  }, [edit]);
+
   return (
-    <form className={style.form} action={submitHandler}>
-      {loading && <Loading />}
+    <form className={style.form} action={edit ? "" : postApi}>
+      {/* {loading && <Loading />} */}
 
       <div>
         <label htmlFor="category">카테고리</label>
@@ -230,7 +257,9 @@ const Schedule = ({ setClose }: props) => {
         <label htmlFor="input_content">일정 내용</label>
         <textarea name="content" id="input_content"></textarea>
       </div>
-      <button className={style.submit_btn}>일정 추가</button>
+      <button className={style.submit_btn}>
+        일정 {edit ? "수정" : "추가"}
+      </button>
     </form>
   );
 };

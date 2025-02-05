@@ -35,14 +35,21 @@ const Calendar = () => {
   dayjs.locale("ko");
   const { holiday, fetchHoliday } = useHolidayStore();
   const { isMonthView, setIsMonthView } = useCalendarUiStore();
-  const { event, fetchEvent, confirm, setConfirm } = useEventStore();
+  const {
+    event,
+    fetchEvent,
+    confirm,
+    setConfirm,
+    isCategoryView,
+    setIsCategoryView,
+  } = useEventStore();
   const { modal, setModal, nowEvent } = useNowEventStore();
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [addEvent, setAddEvent] = useState<boolean>(false);
 
   const year = currentDate.year();
   const month = currentDate.month() + 1;
-
+  // console.log(isCategoryView);
   const firstDayOfMonth = useMemo(
     () =>
       dayjs()
@@ -134,8 +141,8 @@ const Calendar = () => {
   // EVENT
   useEffect(() => {
     fetchEvent();
-    // console.log(event);
-  }, []);
+    console.log(event);
+  }, [isCategoryView]);
 
   return (
     <div className={style.container}>
@@ -163,49 +170,12 @@ const Calendar = () => {
           <button onClick={() => setAddEvent(true)}>일정 추가하기</button>
         </div>
         <div className={style.date}>
-          {/* <span
-            className={style.leftArr}
-            onClick={
-              isMonthView ? () => handlePrevMonth() : () => handlePrevWeek()
-            }
-          >
-            <IoIosArrowBack />
-          </span> */}
           <h3>
             {currentDate.year()}년 {plusFrontZero(currentDate.month() + 1)}월
             {!isMonthView && ` ${currentWeekIndex + 1}주차`}
           </h3>
-          {/* <span
-            className={style.rightArr}
-            onClick={
-              isMonthView ? () => handleNextMonth() : () => handleNextWeek()
-            }
-          >
-            <IoIosArrowForward />
-          </span> */}
-          {/* <button
-            disabled={isToday(currentDate)}
-            className={`${style.todayBtn} ${
-              isToday(currentDate) ? style.disable : ""
-            }`}
-            onClick={() => setCurrentDate(dayjs())}
-          >
-            오늘
-          </button> */}
         </div>
         <div className={style.changeBtn}>
-          {/* <button
-            className={`${isMonthView && style.active}`}
-            onClick={() => setIsMonthView(true)}
-          >
-            월간
-          </button>
-          <button
-            className={`${!isMonthView && style.active}`}
-            onClick={() => setIsMonthView(false)}
-          >
-            주간
-          </button> */}
           <table>
             <tbody>
               <tr>
@@ -225,7 +195,19 @@ const Calendar = () => {
             </tbody>
           </table>
         </div>
-        <div>
+        <div className={style.rightArea}>
+          <select
+            name="selected"
+            id="selected"
+            defaultValue={"all"}
+            onChange={(e) => setIsCategoryView(e.target.value)}
+          >
+            <option value="all">모두 보기</option>
+            <option value="10">휴가</option>
+            <option value="20">출장</option>
+            <option value="30">외근</option>
+            <option value="40">연장근무</option>
+          </select>
           <table className={style.rightBtn}>
             <tbody>
               <tr>
@@ -263,31 +245,6 @@ const Calendar = () => {
               </tr>
             </tbody>
           </table>
-          {/* <span
-            className={style.leftArr}
-            onClick={
-              isMonthView ? () => handlePrevMonth() : () => handlePrevWeek()
-            }
-          >
-            <IoIosArrowBack />
-          </span>
-          <span
-            className={style.rightArr}
-            onClick={
-              isMonthView ? () => handleNextMonth() : () => handleNextWeek()
-            }
-          >
-            <IoIosArrowForward />
-          </span>
-          <button
-            disabled={isToday(currentDate)}
-            className={`${style.todayBtn} ${
-              isToday(currentDate) ? style.disable : ""
-            }`}
-            onClick={() => setCurrentDate(dayjs())}
-          >
-            오늘
-          </button> */}
         </div>
       </div>
       <table className={style.table}>
