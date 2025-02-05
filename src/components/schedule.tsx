@@ -129,7 +129,7 @@ export const UiSchedule = ({ edit, postApi, getApi }: uiProps) => {
   }, [edit]);
 
   return (
-    <form className={style.form} action={edit ? "" : postApi}>
+    <form className={style.form} action={postApi}>
       {/* {loading && <Loading />} */}
 
       <div>

@@ -3,11 +3,11 @@ import "../styles/globals.css";
 import Header from "@/containers/header";
 import localFont from "next/font/local";
 
-export const fontTest = localFont({
-  src: "../../public/font/HJ한전서B.ttf",
-  // variable: "--font-한전서",
-  display: "swap",
-});
+// export const fontTest = localFont({
+//   src: "../../public/font/HJ한전서B.ttf",
+//   // variable: "--font-한전서",
+//   display: "swap",
+// });
 
 export default function RootLayout({
   children,
@@ -22,7 +22,7 @@ export default function RootLayout({
       <body>
         <Header />
         <Sidebar />
-        <main className={fontTest.className}>{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   );

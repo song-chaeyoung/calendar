@@ -59,7 +59,7 @@
 
 "use client";
 import { useRef } from "react";
-import { fontTest } from "../layout";
+// import { fontTest } from "../layout";
 
 const CorporateSeal = () => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -132,7 +132,7 @@ const CorporateSeal = () => {
     // centerText.setAttribute("word-break", "break-word");
     centerText.setAttribute("font-weight", "bold");
     centerText.setAttribute("text-anchor", "middle");
-    centerText.setAttribute("font-family", fontTest.variable);
+    // centerText.setAttribute("font-family", fontTest.variable);
     centerText.innerHTML = "대표 <br/> 이사";
     // centerText.textContent = "이사";
     svg.appendChild(centerText);

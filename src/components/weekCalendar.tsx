@@ -19,68 +19,119 @@ const WeekCalendar = ({
 }: propsType) => {
   const { setModal, setNowEvent } = useNowEventStore();
 
-  // console.log(event);
   const weekPositions = new Map();
-  const allWeekEvents = event?.filter((e) => {
-    const eventStart = e.startDate;
-    const eventEnd = e.endDate;
-    return currenWeek.some((day) => {
-      const dayKey = day.format("YYMMDD");
-      return eventStart <= dayKey && dayKey <= eventEnd;
+  const allWeekEvents = event
+    ?.filter((e) => {
+      const eventStart = e.startDate;
+      const eventEnd = e.endDate;
+      return currenWeek.some((day) => {
+        const dayKey = day.format("YYMMDD");
+        return eventStart <= dayKey && dayKey <= eventEnd;
+      });
+    })
+    .sort((a, b) => {
+      // 시작 날짜가 다르면 날짜순
+      if (a.startDate !== b.startDate) {
+        return a.startDate.localeCompare(b.startDate);
+      }
+      // 시작 시간이 다르면 시간순
+      if (a.startTime !== b.startTime) {
+        return a.startTime.localeCompare(b.startTime);
+      }
+      return 0;
     });
-  });
 
-  const sortedWeekEvents = allWeekEvents?.sort((a, b) => {
-    if (a.startDate !== b.startDate)
-      return a.startDate.localeCompare(b.startDate);
-    return a.startTime.localeCompare(b.startTime);
-  });
+  // sortedWeekEvents?.forEach((currentEvent) => {
+  //   const overlappingEvents = sortedWeekEvents.filter((otherEvent) => {
+  //     if (currentEvent === otherEvent) return false;
 
-  sortedWeekEvents?.forEach((currentEvent) => {
-    const overlappingEvents = sortedWeekEvents.filter((otherEvent) => {
+  //     const dateOverlap =
+  //       currentEvent.startDate <= otherEvent.endDate &&
+  //       currentEvent.endDate >= otherEvent.startDate;
+
+  //     const timeOverlap =
+  //       currentEvent.startTime <= otherEvent.endTime &&
+  //       currentEvent.endTime >= otherEvent.startTime;
+
+  //     const existingPosition = weekPositions.get(otherEvent);
+
+  //     return dateOverlap && (timeOverlap || existingPosition !== undefined);
+  //     // return dateOverlap && timeOverlap;
+  //   });
+
+  //   console.log(currentEvent, overlappingEvents);
+
+  //   let position = 0;
+  //   let positionTaken = true;
+  //   while (positionTaken) {
+  //     positionTaken = overlappingEvents.some(
+  //       (event) => weekPositions.get(event) === position
+  //     );
+
+  //     // overlappingEvents.forEach((lappingEvent) => {
+  //     //   if (currentEvent.startTime >= lappingEvent.startTime) {
+  //     //     const eventPosition = weekPositions.get(lappingEvent);
+  //     //     if (eventPosition !== undefined) {
+  //     //       weekPositions.set(event, eventPosition + 1);
+  //     //       position = eventPosition;
+  //     //     }
+
+  //     //     // console.log(test);
+  //     //     // position = test;
+  //     //     // weekPositions.set(weekPositions);
+  //     //   }
+  //     // });
+  //     if (positionTaken) position++;
+  //   }
+
+  //   weekPositions.set(currentEvent, position);
+  // });
+  console.log(weekPositions);
+
+  allWeekEvents?.forEach((currentEvent) => {
+    // 현재 이벤트와 시간이 겹치는 이벤트 찾기
+    const overlappingEvents = allWeekEvents.filter((otherEvent) => {
       if (currentEvent === otherEvent) return false;
 
       const dateOverlap =
         currentEvent.startDate <= otherEvent.endDate &&
         currentEvent.endDate >= otherEvent.startDate;
 
+      // 시간 겹침 확인 로직 수정
       const timeOverlap =
-        currentEvent.startTime <= otherEvent.endTime &&
-        currentEvent.endTime >= otherEvent.startTime;
+        (currentEvent.startTime < otherEvent.endTime &&
+          currentEvent.endTime > otherEvent.startTime) ||
+        currentEvent.startTime === otherEvent.startTime;
 
-      const existingPosition = weekPositions.get(otherEvent);
-
-      return dateOverlap && (timeOverlap || existingPosition !== undefined);
-      // return dateOverlap && timeOverlap;
+      return dateOverlap && timeOverlap;
     });
 
-    console.log(currentEvent, overlappingEvents);
+    const previousEvents = allWeekEvents.filter((otherEvent) => {
+      if (currentEvent === otherEvent) return false;
 
-    let position = 0;
-    let positionTaken = true;
-    while (positionTaken) {
-      positionTaken = overlappingEvents.some(
-        (event) => weekPositions.get(event) === position
+      const dateOverlap =
+        currentEvent.startDate <= otherEvent.endDate &&
+        currentEvent.endDate >= otherEvent.startDate;
+
+      return (
+        dateOverlap &&
+        otherEvent.endTime <= currentEvent.startTime &&
+        weekPositions.has(otherEvent)
       );
+    });
 
-      // overlappingEvents.forEach((lappingEvent) => {
-      //   if (currentEvent.startTime >= lappingEvent.startTime) {
-      //     const eventPosition = weekPositions.get(lappingEvent);
-      //     if (eventPosition !== undefined) {
-      //       weekPositions.set(event, eventPosition + 1);
-      //       position = eventPosition;
-      //     }
+    let position =
+      previousEvents.length > 0
+        ? Math.max(...previousEvents.map((e) => weekPositions.get(e))) + 1
+        : 0;
 
-      //     // console.log(test);
-      //     // position = test;
-      //     // weekPositions.set(weekPositions);
-      //   }
-      // });
-      if (positionTaken) position++;
+    while (overlappingEvents.some((e) => weekPositions.get(e) === position)) {
+      position++;
     }
 
     weekPositions.set(currentEvent, position);
   });
+
   console.log(weekPositions);
 
   return (
