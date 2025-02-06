@@ -23,7 +23,9 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ error: "값이 필요합니다." }, { status: 400 });
     }
 
-    event.push(body.value);
+    const addIdEvent = { ...body.value, id: Date.now() };
+
+    event.push(addIdEvent);
     revalidatePath("/calendar");
     return NextResponse.json(
       { message: "저장 성공", data: event },
@@ -39,7 +41,33 @@ export const POST = async (req: NextRequest) => {
   // );
 };
 
-export const PATCH = async () => {};
+export const PATCH = async (req: NextRequest) => {
+  try {
+    const body: bodyType = await req.json();
+
+    const index = event.findIndex((e) => e.id === body.value.id);
+
+    if (index !== -1) {
+      event[index] = body.value;
+      revalidatePath("/calendar");
+      return NextResponse.json(
+        { message: "저장 성공", data: event },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        { message: "이벤트를 찾을 수 없습니다" },
+        { status: 404 }
+      );
+    }
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      { error: "서버 PATCH 오류 발생" },
+      { status: 500 }
+    );
+  }
+};
 
 export const DELETE = async (req: NextRequest) => {
   try {
@@ -49,7 +77,7 @@ export const DELETE = async (req: NextRequest) => {
       return NextResponse.json({ error: "값이 필요합니다." }, { status: 400 });
     }
 
-    event = event.filter((item) => item.title !== body.value.title);
+    event = event.filter((item) => item.id !== body.value.id);
     console.log(event);
     return NextResponse.json(
       { message: "삭제 성공", data: event },

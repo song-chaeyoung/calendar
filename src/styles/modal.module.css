@@ -1,4 +1,5 @@
 .container {
+  position: fixed;
   margin-left: 200px;
   margin-top: 60px;
   width: calc(100vw - 200px);
@@ -12,38 +13,53 @@
   align-items: center;
   z-index: 100;
   .mainBox {
+    position: relative;
     background: #fff;
     border-radius: 10px;
-  }
-  .title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    padding: 10px 30px;
-    background: beige;
-    border-radius: 10px 10px 0 0;
+    max-height: 80vh;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    & > p:nth-child(2) {
-      font-size: 14px;
-      cursor: pointer;
-      position: relative;
-      & > span {
-        opacity: 0;
-        position: absolute;
-        bottom: 20%;
-        left: 150%;
-        word-break: keep-all;
-        background: lightgrey;
-        padding: 2px 4px;
-        transition: all 0.3s;
-      }
-      &:hover {
+    flex-direction: column;
+
+    /* overflow: hidden; */
+    .title {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      padding: 10px 30px;
+      background: beige;
+      border-radius: 10px 10px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      & > p:nth-child(2) {
+        font-size: 14px;
+        cursor: pointer;
+        position: relative;
         & > span {
-          opacity: 1;
+          opacity: 0;
+          position: absolute;
+          bottom: 20%;
+          left: 150%;
+          word-break: keep-all;
+          background: lightgrey;
+          padding: 2px 4px;
+          transition: all 0.3s;
+        }
+        &:hover {
+          & > span {
+            opacity: 1;
+          }
         }
       }
+    }
+    .content {
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: calc(80vh - 60px);
     }
   }
 }

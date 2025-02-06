@@ -129,11 +129,29 @@ export const useEventStore = create<eventStoreType>((set, get) => ({
   },
 }));
 
+interface allEventStoreType {
+  viewDay: string;
+  setViewDay: (arg: string) => void;
+  allEvent: eventType[] | [];
+  setAllEvent: (arg: eventType[]) => void;
+  showAllEvent: boolean;
+  setShowAllEvent: (arg: boolean) => void;
+}
+
+export const allEventStore = create<allEventStoreType>((set) => ({
+  viewDay: "",
+  setViewDay: (arg) => set({ viewDay: arg }),
+  allEvent: [],
+  setAllEvent: (arg) => set({ allEvent: arg }),
+  showAllEvent: false,
+  setShowAllEvent: (arg) => set({ showAllEvent: arg }),
+}));
+
 interface nowEventStoreType {
   modal: boolean;
   setModal: (arg: boolean) => void;
   nowEvent: eventType | undefined;
-  setNowEvent: (arg: eventType) => void;
+  setNowEvent: (arg: eventType | undefined) => void;
 }
 
 export const useNowEventStore = create<nowEventStoreType>((set) => ({

@@ -6,6 +6,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import MonthCalendar from "./monthCalendar";
 import WeekCalendar from "./weekCalendar";
 import {
+  allEventStore,
   holidayItemType,
   useCalendarUiStore,
   useEventStore,
@@ -16,9 +17,7 @@ import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import Schedule from "./schedule";
 import Modal from "./modal";
-import NowEvent from "@/containers/nowEvent";
-// import { eventType } from "@/types/event";
-// import Loading from "./loading";
+import NowEvent, { categoryArr } from "@/containers/nowEvent";
 
 const dayName = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -34,6 +33,8 @@ const isToday = (currDay: Dayjs) => {
 const Calendar = () => {
   dayjs.locale("ko");
   const { holiday, fetchHoliday } = useHolidayStore();
+  const { allEvent, showAllEvent, setShowAllEvent, setViewDay, viewDay } =
+    allEventStore();
   const { isMonthView, setIsMonthView } = useCalendarUiStore();
   const {
     event,
@@ -43,13 +44,14 @@ const Calendar = () => {
     isCategoryView,
     setIsCategoryView,
   } = useEventStore();
-  const { modal, setModal, nowEvent } = useNowEventStore();
+  const { modal, setModal, nowEvent, setNowEvent } = useNowEventStore();
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [addEvent, setAddEvent] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(false);
 
   const year = currentDate.year();
   const month = currentDate.month() + 1;
-  // console.log(isCategoryView);
+
   const firstDayOfMonth = useMemo(
     () =>
       dayjs()
@@ -141,14 +143,57 @@ const Calendar = () => {
   // EVENT
   useEffect(() => {
     fetchEvent();
-    console.log(event);
   }, [isCategoryView]);
+
+  // INIT
+  useEffect(() => {
+    if (!modal && !edit) setNowEvent(undefined);
+  }, [modal, edit]);
+
+  useEffect(() => {
+    if (!showAllEvent) setViewDay("");
+  }, [showAllEvent]);
 
   return (
     <div className={style.container}>
+      {showAllEvent && (
+        <Modal setClose={setShowAllEvent} title={viewDay + "의 일정"}>
+          {allEvent.length > 0 ? (
+            allEvent.map((item) => (
+              <div
+                key={item.id}
+                className={style.allEvent}
+                onClick={() => {
+                  setShowAllEvent(false);
+                  setNowEvent(item);
+                  setModal(true);
+                }}
+              >
+                <p className={style[`category${item?.category}`]}>
+                  {item?.category ? categoryArr[item?.category.toString()] : ""}
+                </p>
+                <p>{item.title}</p>
+                <p>
+                  {item.startDate} {item.startTime} -{" "}
+                  {item.startDate !== item.endDate && item.endDate}{" "}
+                  {item.endTime}
+                </p>
+                <p>{item.content && item.content}</p>
+              </div>
+            ))
+          ) : (
+            <p>다시 시도해주세요.</p>
+          )}
+        </Modal>
+      )}
       {addEvent && (
         <Modal setClose={setAddEvent} title="일정 추가하기">
-          <Schedule setClose={setAddEvent} />
+          <Schedule setClose={setAddEvent} edit={edit} setEdit={setEdit} />
+        </Modal>
+      )}
+      {edit && (
+        <Modal setClose={setEdit} title="일정 수정하기">
+          <Schedule setClose={setAddEvent} edit={edit} setEdit={setEdit} />
         </Modal>
       )}
       {confirm && (
@@ -161,7 +206,7 @@ const Calendar = () => {
       )}
       {modal && (
         <Modal setClose={setModal} title={`${nowEvent?.title}`}>
-          <NowEvent nowEvent={nowEvent} setClose={setModal} />
+          <NowEvent setClose={setModal} setEdit={setEdit} />
         </Modal>
       )}
 

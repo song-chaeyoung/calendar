@@ -6,4 +6,5 @@ export interface eventType {
   content: string;
   startTime: string;
   endTime: string;
+  id: number | undefined;
 }

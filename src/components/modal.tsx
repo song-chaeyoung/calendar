@@ -17,7 +17,7 @@ const Modal = ({ setClose, children, title }: propsType) => {
             <span>닫기</span> X
           </p>
         </div>
-        {children}
+        <div className={style.content}>{children}</div>
       </div>
     </div>
   );

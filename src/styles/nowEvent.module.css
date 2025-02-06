@@ -8,9 +8,21 @@
   .category {
     width: fit-content;
     padding: 2px 6px;
-    background: lightcoral;
+    /* background: lightcoral; */
     font-size: 12px;
     border-radius: 4px;
+    &.category10 {
+      background: lightcoral;
+    }
+    &.category20 {
+      background: lightsalmon;
+    }
+    &.category30 {
+      background: lightpink;
+    }
+    &.category40 {
+      background: lightskyblue;
+    }
   }
   .title {
     font-size: 20px;

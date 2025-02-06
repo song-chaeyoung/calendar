@@ -1,12 +1,11 @@
-import { eventType } from "@/types/event";
 import React from "react";
 import style from "../styles/nowEvent.module.css";
 import { IoMdTime } from "react-icons/io";
 import { TbFileDescription } from "react-icons/tb";
 import { FaUser } from "react-icons/fa";
-import { useEventStore } from "@/store/calendarStore";
+import { useEventStore, useNowEventStore } from "@/store/calendarStore";
 
-const categoryArr: Record<string, string> = {
+export const categoryArr: Record<string, string> = {
   10: "휴가",
   20: "출장",
   30: "외근",
@@ -14,19 +13,19 @@ const categoryArr: Record<string, string> = {
 };
 
 interface props {
-  nowEvent: eventType | undefined;
+  // nowEvent: eventType | undefined;
   setClose: (arg: boolean) => void;
+  setEdit: (arg: boolean) => void;
 }
 
-const NowEvent = ({ nowEvent, setClose }: props) => {
+const NowEvent = ({ setClose, setEdit }: props) => {
+  const { nowEvent, setNowEvent } = useNowEventStore();
+
   console.log(nowEvent);
-  // const { setConfirm } = useEventStore;
-  // const [alert, setAlret] = useState<boolean>(false);
-  // const [startYear, startMonth, startDay] = nowEvent?.startDate.slice(2);
+
   const [startYear, startMonth, startDay] =
     nowEvent?.startDate.match(/.{1,2}/g) || [];
-  const [endYear, endMonth, endDay] =
-    nowEvent?.startDate.match(/.{1,2}/g) || [];
+  const [endYear, endMonth, endDay] = nowEvent?.endDate.match(/.{1,2}/g) || [];
 
   const onDeleteEvent = async () => {
     const ok = confirm("삭제하시겠습니까?");
@@ -45,7 +44,7 @@ const NowEvent = ({ nowEvent, setClose }: props) => {
 
         alert("삭제되었습니다.");
         setClose(false);
-
+        setNowEvent(undefined);
         useEventStore.getState().fetchEvent();
       } catch (err) {
         console.log(err);
@@ -55,8 +54,11 @@ const NowEvent = ({ nowEvent, setClose }: props) => {
 
   return (
     <div className={style.container}>
-      {/* {alert && <div>삭제되었습니다.</div>} */}
-      <span className={style.category}>
+      <span
+        className={`${style[`category${nowEvent?.category}`]} ${
+          style.category
+        }`}
+      >
         {nowEvent?.category ? categoryArr[nowEvent?.category.toString()] : ""}
       </span>
       <h1 className={style.title}>{nowEvent?.title}</h1>
@@ -100,7 +102,15 @@ const NowEvent = ({ nowEvent, setClose }: props) => {
         <button className={style.edit} onClick={onDeleteEvent}>
           삭제
         </button>
-        <button className={style.confirm}>수정</button>
+        <button
+          className={style.confirm}
+          onClick={() => {
+            setClose(false);
+            setEdit(true);
+          }}
+        >
+          수정
+        </button>
       </div>
     </div>
   );

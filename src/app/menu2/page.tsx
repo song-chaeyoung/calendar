@@ -106,7 +106,7 @@ const CorporateSeal = () => {
     path.setAttribute("id", "textPath");
     svg.appendChild(path);
 
-    console.log(path);
+    // console.log(path);
 
     // 원형 텍스트 (회사명)
     const text = document.createElementNS(svgNS, "text");
@@ -118,7 +118,7 @@ const CorporateSeal = () => {
     textPath.setAttribute("href", "#textPath");
     textPath.setAttribute("startOffset", "50%");
     textPath.setAttribute("text-anchor", "middle");
-    textPath.textContent = "주식회사 비즈비"; // 여기에 원하는 회사명 넣기
+    textPath.textContent = "주식회사"; // 여기에 원하는 회사명 넣기
 
     text.appendChild(textPath);
     svg.appendChild(text);
@@ -133,7 +133,7 @@ const CorporateSeal = () => {
     centerText.setAttribute("font-weight", "bold");
     centerText.setAttribute("text-anchor", "middle");
     // centerText.setAttribute("font-family", fontTest.variable);
-    centerText.innerHTML = "대표 <br/> 이사";
+    centerText.innerHTML = "<div>대표 <br/> 이사</div>";
     // centerText.textContent = "이사";
     svg.appendChild(centerText);
   };

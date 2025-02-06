@@ -185,7 +185,6 @@
     & td {
       /* border: 1px solid #ccc; */
       box-shadow: 0 0 0.8px rgba(0, 0, 0, 0.55);
-
       width: 160px;
       height: 110px;
       /* min-height: 110px; */
@@ -202,15 +201,18 @@
         color: rgb(44, 44, 221);
       }
     }
+
+    tbody {
+      tr {
+        height: 100%;
+      }
+    }
     .day {
       vertical-align: top;
       overflow: hidden;
       & > span {
         padding-left: 10px;
       }
-    }
-    .weekDay {
-      height: 550px;
     }
     .grey {
       background: rgba(128, 128, 128, 0.1);
@@ -252,12 +254,18 @@
 }
 
 .eventContainer {
-  /* position: relative; */
+  width: 100%;
+  height: 80%;
+  position: relative;
   margin-top: 5px;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  overflow: hidden;
+  /* z-index: ; */
+  display: flex;
+  flex-direction: column;
+  /* align-items: end; */
+  justify-content: end;
   .eventWrapper {
     position: absolute;
     left: 0;
@@ -318,5 +326,49 @@
     .singleDay {
       border-radius: 6px !important;
     }
+  }
+  .plusBtn {
+    color: #999;
+    padding-left: 10px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
+.allEvent {
+  padding: 15px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 400px;
+  cursor: pointer;
+  p:nth-child(1) {
+    font-size: 12px;
+    width: fit-content;
+    padding: 2px 4px;
+    border-radius: 4px;
+    &.category10 {
+      background: lightcoral;
+    }
+    &.category20 {
+      background: lightsalmon;
+    }
+    &.category30 {
+      background: lightpink;
+    }
+    &.category40 {
+      background: lightskyblue;
+    }
+  }
+  p:nth-child(2) {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  p:nth-child(4) {
+    font-size: 14px;
+  }
+
+  &:last-child {
+    margin-bottom: 40px;
   }
 }

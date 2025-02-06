@@ -17,9 +17,11 @@ const WeekCalendar = ({
   getHolidayInfo,
   event,
 }: propsType) => {
+  // const { setAllEvent, setShowAllEvent, setViewDay } = allEventStore();
   const { setModal, setNowEvent } = useNowEventStore();
 
   const weekPositions = new Map();
+
   const allWeekEvents = event
     ?.filter((e) => {
       const eventStart = e.startDate;
@@ -30,10 +32,6 @@ const WeekCalendar = ({
       });
     })
     .sort((a, b) => {
-      // 시작 날짜가 다르면 날짜순
-      if (a.startDate !== b.startDate) {
-        return a.startDate.localeCompare(b.startDate);
-      }
       // 시작 시간이 다르면 시간순
       if (a.startTime !== b.startTime) {
         return a.startTime.localeCompare(b.startTime);
@@ -41,55 +39,7 @@ const WeekCalendar = ({
       return 0;
     });
 
-  // sortedWeekEvents?.forEach((currentEvent) => {
-  //   const overlappingEvents = sortedWeekEvents.filter((otherEvent) => {
-  //     if (currentEvent === otherEvent) return false;
-
-  //     const dateOverlap =
-  //       currentEvent.startDate <= otherEvent.endDate &&
-  //       currentEvent.endDate >= otherEvent.startDate;
-
-  //     const timeOverlap =
-  //       currentEvent.startTime <= otherEvent.endTime &&
-  //       currentEvent.endTime >= otherEvent.startTime;
-
-  //     const existingPosition = weekPositions.get(otherEvent);
-
-  //     return dateOverlap && (timeOverlap || existingPosition !== undefined);
-  //     // return dateOverlap && timeOverlap;
-  //   });
-
-  //   console.log(currentEvent, overlappingEvents);
-
-  //   let position = 0;
-  //   let positionTaken = true;
-  //   while (positionTaken) {
-  //     positionTaken = overlappingEvents.some(
-  //       (event) => weekPositions.get(event) === position
-  //     );
-
-  //     // overlappingEvents.forEach((lappingEvent) => {
-  //     //   if (currentEvent.startTime >= lappingEvent.startTime) {
-  //     //     const eventPosition = weekPositions.get(lappingEvent);
-  //     //     if (eventPosition !== undefined) {
-  //     //       weekPositions.set(event, eventPosition + 1);
-  //     //       position = eventPosition;
-  //     //     }
-
-  //     //     // console.log(test);
-  //     //     // position = test;
-  //     //     // weekPositions.set(weekPositions);
-  //     //   }
-  //     // });
-  //     if (positionTaken) position++;
-  //   }
-
-  //   weekPositions.set(currentEvent, position);
-  // });
-  console.log(weekPositions);
-
   allWeekEvents?.forEach((currentEvent) => {
-    // 현재 이벤트와 시간이 겹치는 이벤트 찾기
     const overlappingEvents = allWeekEvents.filter((otherEvent) => {
       if (currentEvent === otherEvent) return false;
 
@@ -97,7 +47,6 @@ const WeekCalendar = ({
         currentEvent.startDate <= otherEvent.endDate &&
         currentEvent.endDate >= otherEvent.startDate;
 
-      // 시간 겹침 확인 로직 수정
       const timeOverlap =
         (currentEvent.startTime < otherEvent.endTime &&
           currentEvent.endTime > otherEvent.startTime) ||
@@ -132,11 +81,11 @@ const WeekCalendar = ({
     weekPositions.set(currentEvent, position);
   });
 
-  console.log(weekPositions);
+  // console.log(weekPositions);
 
   return (
     <tbody>
-      <tr>
+      <tr className={style.allWeek}>
         {currenWeek.map((day: Dayjs, idx) => {
           const holidayInfo = getHolidayInfo(day);
 
@@ -145,6 +94,10 @@ const WeekCalendar = ({
             event?.filter(
               (item) => item.startDate <= dayKey && dayKey <= item.endDate
             ) || [];
+          const maxPosition = Math.max(
+            ...Array.from(weekPositions.values()),
+            0
+          );
 
           return (
             <td
@@ -156,6 +109,11 @@ const WeekCalendar = ({
                   ? style.today
                   : ""
               }`}
+              style={{
+                height: `${
+                  maxPosition * 60 + 150 >= 550 ? maxPosition * 60 + 150 : 550
+                }px`,
+              }}
             >
               <span>{day.date()}</span>
               {holidayInfo && (
@@ -173,7 +131,7 @@ const WeekCalendar = ({
 
                   return (
                     <div
-                      key={item.title}
+                      key={item.id}
                       className={style.eventWrapper}
                       style={{
                         top: `${weekPositions.get(item) * 60 + 36}px`,
@@ -196,7 +154,7 @@ const WeekCalendar = ({
                               : undefined,
                         }}
                       >
-                        {isStart &&
+                        {(isStart || day.day() === 0) &&
                           `${item.title} ${item.startTime} -
                         ${item.endTime}`}
                       </div>
