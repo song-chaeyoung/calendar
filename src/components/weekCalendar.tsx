@@ -126,8 +126,8 @@ const WeekCalendar = ({
                   const isStart = item.startDate === dayKey;
                   const isEnd = item.endDate === dayKey;
                   const isMultiDay = item.startDate !== item.endDate;
-                  const eventLength =
-                    dayjs(item.endDate).diff(dayjs(item.startDate), "day") + 1;
+                  // const eventLength =
+                  //   dayjs(item.endDate).diff(dayjs(item.startDate), "day") + 1;
 
                   return (
                     <div
@@ -147,12 +147,12 @@ const WeekCalendar = ({
                         } ${isStart ? style.start : ""} ${
                           isEnd ? style.end : ""
                         } ${isMultiDay ? style.multiDay : style.singleDay}`}
-                        style={{
-                          gridColumn:
-                            isStart && isMultiDay
-                              ? `span ${eventLength}`
-                              : undefined,
-                        }}
+                        // style={{
+                        //   gridColumn:
+                        //     isStart && isMultiDay
+                        //       ? `span ${eventLength}`
+                        //       : undefined,
+                        // }}
                       >
                         {(isStart || day.day() === 0) &&
                           `${item.title} ${item.startTime} -

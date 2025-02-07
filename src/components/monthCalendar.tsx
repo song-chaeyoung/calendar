@@ -84,7 +84,7 @@ const MonthCalendar = ({
               console.log(sortedEvents);
 
               const viewEvent =
-                dayEvents.length > 3 ? dayEvents.slice(0, 2) : dayEvents;
+                dayEvents.length >= 3 ? dayEvents.slice(0, 2) : dayEvents;
               console.log(dayEvents, viewEvent);
               return (
                 <td

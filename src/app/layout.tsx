@@ -1,7 +1,7 @@
 import Sidebar from "@/containers/sidebar";
 import "../styles/globals.css";
 import Header from "@/containers/header";
-import localFont from "next/font/local";
+// import localFont from "next/font/local";
 
 // export const fontTest = localFont({
 //   src: "../../public/font/HJ한전서B.ttf",
